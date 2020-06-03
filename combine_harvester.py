@@ -1,12 +1,11 @@
 from datetime import date
 from itertools import islice, count
-import os
-import requests
-import jq
 import json
-from pyfzf.pyfzf import FzfPrompt
+import os
 
-fzf = FzfPrompt()
+import jq
+from pyfzf.pyfzf import FzfPrompt
+import requests
 
 
 def iter_range(start, stop, step=1.0):
@@ -14,20 +13,18 @@ def iter_range(start, stop, step=1.0):
     return islice(count(start, step), length)
 
 
-harvest_id = os.getenv("HARVEST_ACCOUNT_ID")
-harvest_token = os.getenv("HARVEST_ACCOUNT_TOKEN")
-
-headers = {
-    "Harvest-Account-ID": harvest_id,
-    "Authorization": f"Bearer {harvest_token}",
-}
-
-api_url = "https://api.harvestapp.com/api/v2/users/me/project_assignments/"
-
-
 def main():
+    fzf = FzfPrompt()
+    harvest_id = os.getenv("HARVEST_ACCOUNT_ID")
+    harvest_token = os.getenv("HARVEST_ACCOUNT_TOKEN")
+    headers = {
+        "Harvest-Account-ID": harvest_id,
+        "Authorization": f"Bearer {harvest_token}",
+    }
+    api_url = "https://api.harvestapp.com/api/v2"
+
     response = requests.get(
-        api_url,
+        api_url+"/users/me/project_assignments/",
         headers=headers
     )
 
@@ -80,19 +77,15 @@ def main():
     notes = input("(Optional) Add task notes? Press enter to leave blank: ")
 
     log_url = (
-        f"https://api.harvestapp.com/v2/time_entries?"
-        f"project_id={project_id}&task_id={task_id}"
-        f"&spent_date={date.today().isoformat()}"
-        f"&hours={time_choice}"
+        f"{api_url}/time_entries"
+        f"?project_id={project_id}&task_id={task_id}"
+        f"&spent_date={date.today().isoformat()}&hours={time_choice}"
     )
 
     if notes != '':
         log_url += f"&notes={notes}"
 
-    response = requests.post(
-        log_url,
-        headers=headers
-    )
+    response = requests.post(log_url, headers=headers)
 
 
 if __name__ == "__main__":
