@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "combine_harvester"
+version = "0.1.1"
+description = ""
+authors = ["André Madeira Cortes <amadeiracortes@gmail.com>"]
+license = "GPL-3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+requests = "^2.23.0"
+jq = "^1.0.1"
+pyfzf = "^0.2.1"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+harvest = "combine_harvester:main"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
