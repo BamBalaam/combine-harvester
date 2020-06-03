@@ -1,40 +1,17 @@
-from datetime import date
-from itertools import islice, count
+from datetime import date, datetime, timedelta
 import os
 
+import click
 from pyfzf.pyfzf import FzfPrompt
 import requests
 
-
-def iter_range(start, stop, step=1.0):
-    length = int(abs(stop - start) / step)
-    return islice(count(start, step), length)
+from utils import iter_range, parse_project_assignments
 
 
-def parse_project_assignments(rest_response):
-    parsed_data = {}
-    projects = []
-    for item in rest_response["project_assignments"]:
-        project_instance = {
-            "id": item["project"]["id"],
-            "name": item["project"]["name"],
-            "tasks": item["task_assignments"],
-        }
-        projects.append(project_instance)
-
-    for item in projects:
-        project_name = item["name"]
-        parsed_data[project_name] = {}
-        parsed_data[project_name]["id"] = item["id"]
-        tasks = {}
-        for task in item["tasks"]:
-            tasks[task["task"]["name"]] = task["task"]["id"]
-        parsed_data[project_name]["tasks"] = tasks
-
-    return parsed_data
-
-
-def main():
+@click.group()
+@click.pass_context
+def main(ctx):
+    """Combine Harvester is a Harvest CLI Tool"""
     fzf = FzfPrompt()
     harvest_id = os.getenv("HARVEST_ACCOUNT_ID")
     harvest_token = os.getenv("HARVEST_ACCOUNT_TOKEN")
@@ -43,7 +20,43 @@ def main():
         "Authorization": f"Bearer {harvest_token}",
     }
     api_url = "https://api.harvestapp.com/api/v2"
+    ctx.obj = {"fzf": fzf, "headers": headers, "api_url": api_url}
 
+
+@main.command()
+@click.pass_context
+def daily(ctx):
+    """Get time entries from previous day, to be used during daily standup.
+
+    Will return time entries from the day before, except on Monday, which will
+    return entries from last Friday.
+    """
+    api_url, headers = ctx.obj["api_url"], ctx.obj["headers"]
+    yesterday = datetime.strftime(datetime.now() - timedelta(1), "%Y-%m-%d")
+    friday = datetime.strftime(datetime.now() - timedelta(3), "%Y-%m-%d")
+    if date.today().weekday() == 0:
+        daily_url = api_url + f"/time_entries?from={friday}&to={friday}"
+    else:
+        daily_url = api_url + f"/time_entries?from={yesterday}&to={yesterday}"
+
+    response = requests.get(daily_url, headers=headers)
+    for entry in response.json()["time_entries"][::-1]:
+        if entry["notes"] != "":
+            print(f"- {entry['notes']}")
+
+
+@main.command()
+@click.pass_context
+def log(ctx):
+    """Log time entry for today, using FZF.
+
+    Uses FZF to list projects, tasks, hours and others to add a time entry.
+    """
+    api_url, headers, fzf = (
+        ctx.obj["api_url"],
+        ctx.obj["headers"],
+        ctx.obj["fzf"],
+    )
     response = requests.get(
         api_url + "/users/me/project_assignments/", headers=headers
     )
@@ -85,4 +98,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(obj={})

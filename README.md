@@ -24,4 +24,15 @@ pip install combine-harvester
 
 ```
 > harvest
+
+Usage: harvest [OPTIONS] COMMAND [ARGS]...
+
+  Combine Harvester is a Harvest CLI Tool
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  daily  Get time entries from previous day, to be used during daily standup.
+  log    Log time entry for today, using FZF.
 ```

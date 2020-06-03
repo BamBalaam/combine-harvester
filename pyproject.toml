@@ -16,6 +16,7 @@ classifiers = [
 python = "^3.6"
 requests = "^2.23.0"
 pyfzf = "^0.2.1"
+click = "^7.1.2"
 
 [tool.poetry.dev-dependencies]
 
