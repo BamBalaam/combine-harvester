@@ -1,10 +1,16 @@
 [tool.poetry]
 name = "combine_harvester"
-version = "0.1.1"
-description = ""
-authors = ["André Madeira Cortes <amadeiracortes@gmail.com>"]
+version = "0.2.0"
+description = "CLI tool to log Harvest timesheets with FZF "
 license = "GPL-3.0"
+authors = ["André Madeira Cortes <amadeiracortes@gmail.com>"]
 readme = "README.md"
+repository = "https://github.com/BamBalaam/combine-harvester"
+keywords = ["fzf", "harvest", "harvest-api", "time-tracker", "time-tracking"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+]
 
 [tool.poetry.dependencies]
 python = "^3.6"
