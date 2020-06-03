@@ -13,7 +13,6 @@ pip install combine-harvester
 ## Requirements
 
 * Python 3.6 (f-strings!)
-* [jq](https://github.com/stedolan/jq)
 * [fzf](https://github.com/junegunn/fzf)
 
 ## Environment Variables

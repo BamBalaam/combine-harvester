@@ -9,7 +9,6 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.6"
 requests = "^2.23.0"
-jq = "^1.0.1"
 pyfzf = "^0.2.1"
 
 [tool.poetry.dev-dependencies]
