@@ -2,6 +2,7 @@ from datetime import date, datetime, timedelta
 import os
 
 import click
+import iso8601
 from pyfzf.pyfzf import FzfPrompt
 import requests
 
@@ -43,6 +44,35 @@ def daily(ctx):
     for entry in response.json()["time_entries"][::-1]:
         if entry["notes"] != "":
             print(f"- {entry['notes']}")
+
+
+@main.command()
+@click.option('--day', type=str, help="Day in ISO format: YYYY-MM-DD.")
+@click.pass_context
+def list(ctx, day):
+    """Get time entries from today, or optionally another day."""
+    api_url, headers = ctx.obj["api_url"], ctx.obj["headers"]
+    if day is None:
+        today = date.today().isoformat()
+        list_url = api_url + f"/time_entries?from={today}&to={today}"
+    else:
+        try:
+            iso8601.parse_date(day)
+        except iso8601.iso8601.ParseError:
+            print("Invalid ISO format string")
+            ctx.exit(1)
+        list_url = api_url + f"/time_entries?from={day}&to={day}"
+
+    response = requests.get(list_url, headers=headers)
+    for entry in response.json()["time_entries"][::-1]:
+        project = entry['project']['name']
+        time = entry['hours']
+        task = entry['task']['name']
+        note = ""
+        print(f"({time} hours) - {project}")
+        if entry["notes"] != "":
+            note = entry['notes']
+        print(f"{task} {'- ' + note if note != '' else ''}\n")
 
 
 @main.command()
