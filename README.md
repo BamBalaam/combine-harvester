@@ -33,7 +33,7 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  daily  Get time entries from previous day, to be used during daily...
+  daily  Get notes from previous work day, to be used during daily standup.
   list   Get time entries from today, or optionally another day.
   log    Log time entry for today, using FZF.
 ```

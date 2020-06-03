@@ -27,7 +27,7 @@ def main(ctx):
 @main.command()
 @click.pass_context
 def daily(ctx):
-    """Get time entries from previous day, to be used during daily standup.
+    """Get notes from previous work day, to be used during daily standup.
 
     Will return time entries from the day before, except on Monday, which will
     return entries from last Friday.
