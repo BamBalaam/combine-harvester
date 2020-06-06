@@ -26,6 +26,8 @@ Creating these tokens can be done through [Harvest's Developer Tools](https://id
 
 ## Usage
 
+This [wiki page](https://github.com/BamBalaam/combine-harvester/wiki/Usage) lists all commands and their usage.
+
 ```
 > harvest
 
