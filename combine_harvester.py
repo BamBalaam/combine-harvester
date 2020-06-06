@@ -109,7 +109,7 @@ def log(ctx):
     task_id = harvest_data[project_choice]["tasks"][task_choice]
 
     time_choice = fzf.prompt(
-        list(iter_range(0.5, 8.5, 0.5)),
+        iter_range(0.5, 8.5, 0.5),
         "--prompt 'Amount of Hours to log?:  ' --reverse",
     )[0]
 
