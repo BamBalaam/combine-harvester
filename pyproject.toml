@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "combine_harvester"
-version = "0.3.0"
+version = "0.3.2"
 description = "CLI tool to log Harvest timesheets with FZF "
 license = "GPL-3.0"
 authors = ["André Madeira Cortes <amadeiracortes@gmail.com>"]
@@ -12,6 +12,7 @@ classifiers = [
     "Environment :: Console",
 ]
 packages = [
+    { include = "combine_harvester.py" },
     { include = "utils.py" },
 ]
 
